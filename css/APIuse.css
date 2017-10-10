@@ -1,0 +1,30 @@
+body{
+    background-color: #fff;
+    font-family: sans-serif;
+}
+h1{
+    font-weight: normal;
+    font-size: 140%;
+    }
+#blocklyDiv{
+	position: relative;
+	width: 1300px;
+	height: 530px;
+	margin-left: 40px;
+}
+.row{
+	left: 0px !important;
+	right: 0px !important;
+}
+#run{
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: darkgrey;
+	color: white;
+	font-size: large;
+	margin-left: 1210px;
+	margin-top: 240px;
+	z-index: 999;
+}

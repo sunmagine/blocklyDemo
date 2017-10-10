@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Blockly Demo:Generating Javascript</title>
+		<script src="../js/jquery-3.2.1.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/blockly_compressed.js"></script>
+        <script src="../js/blocks_compressed.js"></script>
+        <script src="../js/javascript_compressed.js"></script>
+        <script src="../js/en.js"></script>
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/APIuse.css" />
+	</head>
+	<body>
+		<div id="container">
+			<div class="row first">
+				<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#"><img style="width: 100px;height: 30px; margin-top: -5px;" src="../img/logo.png"/></a>
+    </div>
+    <div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="#">model1</a></li>
+            <li><a href="#">model2</a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    model3
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">item1</a></li>
+                    <li><a href="#">item2</a></li>
+                    <li><a href="#">item3</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">item4</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">item5</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    </div>
+</nav>
+			</div>
+			<div class="row second">	
+		    <div id="blocklyDiv">
+		    	<button onclick="runCode()" id="run">Run</button>
+		    </div>
+		     <p>
+			<!--<button onclick="showCode()" id="show">Show JavaScript</button>-->
+			
+		    </p>
+			</div>
+			
+		</div>
+		
+		<xml id="toolbox" style="display: none;">
+			
+			<category name="呼叫控制类API" colour="#a65c81">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="号码翻译类API"colour="#cccc00"	>
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="外呼类API" colour="#cc3300">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="多方通话类API" colour="#cc3333">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="IVR类API" colour="#993300">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="消息类API" colour="#996666">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="管道类API" colour="#669900">
+				<block type="triggerapi1">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<block type="triggerapi2">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+			</category>
+			<sep></sep>
+			<category name="逻辑处理" colour="#6666cc">
+				  <block type="controls_if"></block>
+			      <block type="logic_compare"></block>
+			      <block type="logic_operation"></block>
+			      <block type="logic_negate"></block>
+			      <block type="logic_boolean"></block>
+			      <block type="logic_null"></block>
+			      <block type="logic_ternary"></block>	
+			</category>
+			<sep></sep>
+			<category name="自定义API" colour="#a65c81" custom="VARIABLE"></category>
+			<sep></sep>
+			<category name="函数" colour="#eee685" custom="PROCEDURE"></category>
+			<sep></sep>
+		</xml>
+		
+		<script>
+			var workspace = Blockly.inject('blocklyDiv',{
+				media:'../media/',
+				toolbox:document.getElementById('toolbox'),
+				grid:
+		         {spacing: 20,
+		          length: 3,
+		          colour: '#ccc',
+		          snap: true},
+				zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		          trashcan: true
+				});
+			
+			function showCode(){
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				var code = Blockly.JavaScript.workspaceToCode(workspace);
+				alert(code);
+			}
+			 
+			function runCode(){
+				window.LoopTrap =1000;
+				Blockly.JavaScript.INFINITY_LOOP_TRAP=
+				'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
+				var code=Blockly.JavaScript.workspaceToCode(workspace);
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				try{
+					eval(code);
+				}catch(e){
+					alert(e);
+				}
+			}
+			
+			
+			Blockly.Blocks['triggerapi1'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("API1")
+			        .appendField(new Blockly.FieldDropdown([["true","true"], ["false","false"]]), "boolchoose");
+			    this.setInputsInline(false);
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			    this.setTooltip("");
+			    this.setHelpUrl("");
+			  }
+			};
+			Blockly.Blocks['triggerapi2'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("API2")
+			        .appendField(new Blockly.FieldDropdown([["true","true"], ["false","false"]]), "boolchoose");
+			    this.setInputsInline(false);
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			    this.setTooltip("");
+			    this.setHelpUrl("");
+			  }
+			};
+			Blockly.JavaScript['triggerapi1'] = function(block) {
+			  var dropdown_boolchoose = block.getFieldValue('boolchoose');
+			  if(dropdown_boolchoose==='true'){			  	
+			  	//调用豆瓣新闻接口
+			  	var datatosend={};
+			  	$.ajax({
+			  		type:"GET",
+			  		url:"https://api.douban.com/v2/book/1220562",
+			  		dataType:"JSONP",
+			  		async:false,
+					data:datatosend,
+					crossDomain:true,
+			  		success:function(data){
+			  		  console.log(data);
+			  		 // alert("success");
+                       
+//                       $.each(data,function(index,obj){
+//		                $("#switch").append("<div>"+//获得图片地址
+//		                    "<div>"+obj['id']+"</div>"+
+//		                    //获得名字
+//		                    "<span>"+obj['alt']+"</span>"+
+//		                    //获得性别
+//		                    "<span>"+obj['rating']+"</span>"+
+//		                    //获得邮箱地址
+//		                    "<span>"+obj['author']+"</span>"+
+//		                    "</div>");
+//		                });
+//                     var code="<ul>";
+//                     //i表示在data中的索引位置，n表示包含的信息的对象 
+//                     $.each(data,function(i,n){
+//                      code+="<li>"+n['id']+"</li>"
+//                     });
+//                     code+="</ul>";
+                        var code=data.title;
+                       //$('#switch').append(code);
+                       alert(code);
+					},
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.log("+++++");
+		            console.log(XMLHttpRequest.status);
+					console.log(XMLHttpRequest.readyState);
+					console.log(textStatus);
+					alert("error");//进入到run里面了
+				}
+			 })
+			 return false;
+			}else{
+			  	//调用接口
+			  	var datatosend={
+			  		"type":'hot',
+			  		'offset':0,
+			  		"limit":1000
+			  	};
+			  	$.ajax({
+			  		type:"GET",
+			  		url:"http://m.maoyan.com/movie/list.json",
+			  		dataType:"JSONP",
+			  		async:false,
+					data:datatosend,
+					crossDomain:true,
+			  		success:function(data){
+			  		  console.log(data);
+			  		  alert("success");
+			  		  var code="<ul>";
+                       //i表示在data中的索引位置，n表示包含的信息的对象 
+                       $.each(data,function(i,n){
+                        code+="<li>"+n['code']+"</li>"
+                       });
+                       code+="</ul>";
+                       $('#switch').append(code); 
+			  			
+			  		},
+			  		error: function(XMLHttpRequest, textStatus, errorThrown) {
+		            console.log("+++++");
+		            console.log(XMLHttpRequest.status);
+					console.log(XMLHttpRequest.readyState);
+					console.log(textStatus);
+					//进入到run里面了
+					alert("error");
+		       }
+			  	})
+			  }
+			  //return code;
+			};
+		</script>
+	</body>
+</html>

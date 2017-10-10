@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Blockly Demo:Generating Javascript</title>
+		<script src="../js/blockly_compressed.js"></script>
+        <script src="../js/blocks_compressed.js"></script>
+        <script src="../js/javascript_compressed.js"></script>
+        <script src="../js/en.js"></script>
+        <!--<script src="../js/customblocks.js"></script>-->
+        <style>
+        	body{
+        		background-color: #fff;
+        		font-family: sans-serif;
+        	}
+        	h1{
+        		font-weight: normal;
+        		font-size: 140%;
+        	}
+        	#red{
+        		height: 30px;
+        		width: 30px;
+        		border-radius: 50%;
+        		background-color: white;
+        		border: solid 1px black;
+        		float: left;
+        		margin: 10px;
+        	}
+        	#yellow{
+        		height:30px;
+        		width:30px;
+        		border-radius:50%;
+        		background-color:white;
+        		border: solid 1px black;
+        		float: left;
+        		margin: 10px;
+        	}
+        	#green{
+        		height: 30px;
+        		width: 30px;
+        		border-radius: 50%;
+        		background-color: white;
+        		border: solid 1px black;
+        		float: left;
+        		margin: 10px;
+        	}
+        </style>
+	</head>
+	<body>
+		<p>
+			<button onclick="showCode()">Show JavaScript</button>
+			<button onclick="runCode()">Run JavaScript</button>
+		</p>
+		<div id="blocklyDiv" style="height: 480px;width: 600px;border: 1px solid black;"></div>
+		<xml id="toolbox" style="display: none;">
+			<category name="Logic">
+				<block type="controls_if"></block>
+				<block type="lightswitch">
+					<field name="lightcolor">red</field>
+				    <field name="switch">on</field>
+				</block>
+				<!--<block type="wait">
+					<field name="TIME">0</field>
+				</block>
+				<block type="logic_compare">
+					<field name="OP">EQ</field>
+				</block>
+				<block type="controls_whileUntil">
+					<field name="MODE">WHILE</field>
+				</block>
+				<block type="logic_operation">
+					<field name="OP">AND</field>
+				</block>
+				<block type="controls_if">
+					<value name="IF0">
+						<block type="logic_boolean">
+							<field name="BOOL">TRUE</field>
+						</block>
+					</value>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">yellow</field>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">green</field>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">red</field>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">all</field>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">on</field>
+				</block>
+				<block type="variables_get">
+					<field name="VAR">off</field>
+				</block>
+				<block type="math_number">
+					<field name="NUM">0</field>
+				</block>-->
+			</category>
+			<category name="Variables" colour="#a65c81" custom="VARIABLE"></category>
+		</xml>
+		<div id="resultBox">
+            <div id="red"></div>
+            <div id="yellow"></div>
+            <div id="green"></div>
+		</div>
+		<script>
+			var workspace = Blockly.inject('blocklyDiv',{
+				media:'../media/',
+				toolbox:document.getElementById('toolbox')
+			});
+			
+			function showCode(){
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				var code = Blockly.JavaScript.workspaceToCode(workspace);
+				alert(code);
+			}
+			
+			function runCode(){
+				window.LoopTrap =1000;
+				Blockly.JavaScript.INFINITY_LOOP_TRAP=
+				'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
+				var code=Blockly.JavaScript.workspaceToCode(workspace);
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				try{
+					eval(code);
+				}catch(e){
+					alert(e);
+				}
+			}
+			
+			
+			
+			Blockly.Blocks['lightswitch'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("Turn")
+			        .appendField(new Blockly.FieldDropdown([["red","red"],["yellow","yellow"], ["green","green"], ["all","all"]]), "lightcolor")
+			        .appendField(new Blockly.FieldDropdown([["on","on"], ["off","off"]]), "switch");
+			    this.setInputsInline(false);
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(120);
+			 this.setTooltip("");
+			 this.setHelpUrl("");
+			  }
+			};
+			Blockly.JavaScript['lightswitch'] = function(block) {
+			  var dropdown_lightcolor = block.getFieldValue('lightcolor');
+			  var dropdown_switch = block.getFieldValue('switch');
+			  if(dropdown_switch==="all"){
+			  	if(dropdown_switch==="on"){
+			  		var code="document.getElementById('red').style.backgroundColor='red';document.getElementById('green').style.backgroundColor='green';document.getElementById('yellow').style.backgroundColor='yellow';"
+			  	}
+			  	if(dropdown_switch==="off"){
+			  		var code="document.getElementById('red').style.backgroundColor='white';document.getElementById('green').style.backgroundColor='white';document.getElementById('yellow').style.backgroundColor='white';"
+			  	}
+			  }else{
+			  	if(dropdown_switch==="on"){
+			  		var code="document.getElementById('"+dropdown_lightcolor+"').style.background='"+dropdown_lightcolor+"';"
+			  	}
+			  	if(dropdown_switch==="off"){
+			  		var code="document.getElementById('"+dropdown_lightcolor+"').style.background='white';"
+			  	}
+			  }
+			  
+			  return code;
+			};
+
+		</script>
+	</body>
+</html>
