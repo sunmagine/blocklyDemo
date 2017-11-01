@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<meta charset="UTF-8">
+		<title>Blockly Demo:Generating Javascript</title>
+		<script src="../js/jquery-3.2.1.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/blockly_compressed.js"></script>
+        <script src="../js/blocks_compressed.js"></script>
+        <script src="../js/javascript_compressed.js"></script>
+        <script src="../js/en.js"></script>
+        <script src="../js/xml.js"></script>
+        <script src="../js/xml_test.js"></script>
+        <script src="../js/angular.min.js"></script>
+        <script src="../js/angular-sanitize.min.js"></script>
+        <script src="../js/generatexml.js"></script>
+        <!--<script src="../js/testorigin.js"></script>-->
+        <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../css/APIuse.css" />
+	</head>
+	<body>
+		<div id="container" ng-app="myApp"  ng-controller="event">
+			<div class="row first">
+			   <nav class="navbar navbar-default" role="navigation">
+			    <div class="container-fluid">
+			    <div class="navbar-header">
+			        <a class="navbar-brand" href="#"><img style="width: 100px;height: 30px; margin-top: -5px;" src="../img/logo.png"/></a>
+			    </div>
+			    <div>
+			        <ul class="nav navbar-nav">
+			            <li class="active"><a href="#">文件</a></li>
+			            <li><a href="#" onclick="runCode()">调试</a></li>
+			            <li class="dropdown">
+			                <a href="#" class="dropdown-toggle" data-toggle="dropdown">工具
+			                    <b class="caret"></b>
+			                </a>
+			                <ul class="dropdown-menu">
+			                    <li ng-click="test()"><a href="#">{{text}}</a></li>
+			                    <li><a href="#">运行</a></li>
+			                    <li><a href="#">item3</a></li>
+			                    <li class="divider"></li>
+			                    <li><a href="#">item4</a></li>
+			                    <li class="divider"></li>
+			                    <li><a href="#">item5</a></li>
+			                </ul>
+			            </li>
+			            <li><a href="#">窗口</a></li>
+			            <li><a href="#">帮助</a></li>
+			        </ul>
+			    </div>
+			    </div>
+			</nav>
+			</div>
+			<div class="row second">
+            <div class="left col-md-8">
+            	<div id="blocklyDiv">
+		    	<!--<button onclick="runCode()" id="run">Run</button>-->
+		    	<!--<button onclick="outputxml()" id="xml">XML</button>-->
+		        </div>
+            </div>
+		    <div class="right col-md-4">
+		    	<ul id="myTab" class="nav nav-tabs">
+				   <li class="active"><a href="#home" data-toggle="tab">
+				      API属性</a>
+				   </li>
+				   <li><a href="#ios" data-toggle="tab">XML文件</a></li>
+				   <!--<li class="dropdown">
+				      <a href="#" id="myTabDrop1" class="dropdown-toggle" 
+				         data-toggle="dropdown">Java <b class="caret"></b>
+				      </a>
+				      <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+				         <li><a href="#jmeter" tabindex="-1" data-toggle="tab">
+				            jmeter</a>
+				         </li>
+				         <li><a href="#ejb" tabindex="-1" data-toggle="tab">
+				            ejb</a>
+				         </li>
+				      </ul>
+				   </li>-->
+				</ul>
+				<div id="myTabContent" class="tab-content">
+				   <div class="tab-pane fade in active" id="home">
+				     <!--API属性-->
+				     <ul class="attr">
+				     	<li></li>
+				     	<li></li>
+				     	<li></li>
+				     </ul>
+				   </div>
+				   <div class="tab-pane fade" id="ios">
+				     <!--XML文件-->
+				     <div ng-model="xml">{{xml}}</div>
+				   </div>
+				  
+				</div>
+		    </div>
+		     <!--<p>
+			<button onclick="showCode()" id="show">Show JavaScript</button>
+		    </p>-->
+			</div>	
+			<div class="row third">
+				<div class="console">
+					<table>
+						<thead style="background: lightgray;"><td style="width: 900px;">调试信息</td></thead>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		<xml id="toolbox" style="display: none;">
+			
+			<category name="预定航班" colour="#a65c81">
+				<block type="triggerapi1" id="001" ></block>
+				<block type="triggerapi2" id="002" ></block>
+				<block type="triggerapi3" id="003" ></block>
+				<block type="myblock"></block>
+			</category>
+			<sep></sep>
+			<category name="逻辑处理" colour="#6666cc">
+				  <block type="controls_if"></block>
+			      <block type="logic_compare"></block>
+			      <block type="logic_operation"></block>
+			      <block type="logic_negate"></block>
+			      <block type="logic_boolean"></block>
+			      <block type="logic_null"></block>
+			      <block type="logic_ternary"></block>	
+			</category>
+			<sep></sep>
+			<category name="自定义API" colour="#a65c81" custom="VARIABLE"></category>
+			<sep></sep>
+			<category name="函数" colour="#eee685" custom="PROCEDURE"></category>
+			<sep></sep>
+		</xml>
+		
+		<script>
+			var workspace = Blockly.inject('blocklyDiv',{
+				media:'../media/',
+				toolbox:document.getElementById('toolbox'),
+				grid:
+		         {spacing: 20,
+		          length: 3,
+		          colour: '#ccc',
+		          snap: true},
+				zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		          trashcan: true
+				});
+			
+			function showCode(){
+				Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+				var code = Blockly.JavaScript.workspaceToCode(workspace);
+				alert(code);
+			}
+			 
+//			  function outputxml(){
+//		    	  var xml = Blockly.Xml.workspaceToDom(workspace);
+//			      var xml_text = Blockly.Xml.domToPrettyText(xml);
+//			      alert(xml_text);
+//			      
+//			    }
+			 
+			function runCode(){
+      	                window.LoopTrap =1000;
+						Blockly.JavaScript.INFINITY_LOOP_TRAP=
+						'if(--window.LoopTrap == 0) throw "Infinite loop.";\n';
+						var code=Blockly.JavaScript.workspaceToCode(workspace);
+						Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+						try{
+							eval(code);
+						}catch(e){
+							alert(e);
+						}     
+			}
+			
+			workspace.addChangeListener(runCode);    
+			//workspace.addEventListener(runCode);
+			
+		    //workspace.removeChangeListener(runCode); 
+			Blockly.Blocks['myblock'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("on mouse click")
+			        .appendField(new Blockly.FieldDropdown([["show","show"], ["hide","hide"]]), "Attr");
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			 this.setTooltip("");
+			 this.setHelpUrl("");
+			  }
+			};		   
+	        
+			Blockly.JavaScript['myblock'] = function(block) {
+			  var dropdown_attr = block.getFieldValue('Attr');
+			  if(dropdown_attr==="show"){
+				  	var datatosend={};
+				  		$.ajax({
+				  		type:"GET",
+				  		url:"http://127.0.0.1:10010/getServiceByID?ID=001",
+				  		dataType:"JSON",
+				  		async:false,
+						data:datatosend,
+						crossDomain:true,
+				  		success:function(data){
+				  		//调用显示属性接口
+	                    console.log(data);
+	                     var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+	                     //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+	                    code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+	                    code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+	                    code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+	                    code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+	                    code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+	                    code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+	                    code+="<table>"
+	                    $('#home').empty().append(code); 
+	                    $("tbody>tr:odd").addClass("odd");
+					    $("tbody>tr:even").addClass("even");
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+			            console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+						alert("失败");//进入到run里面了
+					}			 	
+				  	})	
+			  }else{
+			  	$('#home').empty();
+			  }
+			  return code;
+			};
+				
+			
+			
+			
+			Blockly.Blocks['triggerapi1'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("预定往机票      ")
+			        .appendField(new Blockly.FieldDropdown([["show attr","show"], ["hide attr","hide"]]), "Attr");
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			 this.setTooltip("");
+			 this.setHelpUrl("");
+			  }
+			};
+			
+			
+			
+			Blockly.JavaScript['triggerapi1'] = function(block) {
+			  var dropdown_attr = block.getFieldValue('Attr');
+			  	if(dropdown_attr==="show"){
+				  	var datatosend={};
+				  		$.ajax({
+				  		type:"GET",
+				  		url:"http://127.0.0.1:10010/getServiceByID?ID=001",
+				  		dataType:"JSON",
+				  		async:false,
+						data:datatosend,
+						crossDomain:true,
+				  		success:function(data){
+				  		//调用显示属性接口
+	                    console.log(data);
+	                     var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+	                     //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+	                    code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+	                    code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+	                    code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+	                    code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+	                    code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+	                    code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+	                    code+="<table>"
+	                    $('#home').empty().append(code); 
+	                    $("tbody>tr:odd").addClass("odd");
+					    $("tbody>tr:even").addClass("even");
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+			            console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+						alert("失败");//进入到run里面了
+					}			 	
+				  	})	
+			  }else{
+			  	$('#home').empty();
+			  }
+			
+			  return code;
+			};
+			
+			
+			Blockly.Blocks['triggerapi2'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("预定返机票      ")
+			        .appendField(new Blockly.FieldDropdown([["show attr","show"], ["hide attr","hide"]]), "Attr");
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			 this.setTooltip("");
+			 this.setHelpUrl("");
+			  }
+			};
+			Blockly.JavaScript['triggerapi2'] = function(block) {
+			  var dropdown_attr = block.getFieldValue('Attr');
+			  if(dropdown_attr==="show" ){
+				  	var datatosend={};
+				  		$.ajax({
+				  		type:"GET",
+				  		url:"http://127.0.0.1:10010/getServiceByID?ID=002",
+				  		dataType:"JSON",
+				  		async:false,
+						data:datatosend,
+						crossDomain:true,
+				  		success:function(data){
+				  		//调用显示属性接口
+	                    console.log(data);
+	                     var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+	                     //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+	                    code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+	                    code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+	                    code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+	                    code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+	                    code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+	                    code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+	                    code+="<table>"
+	                    $('#home').empty().append(code); 
+	                    $("tbody>tr:odd").addClass("odd");
+					    $("tbody>tr:even").addClass("even");
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+			            console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+						alert("失败");//进入到run里面了
+					}			 	
+				  	})	
+			  }else{
+			  	$('#home').empty();
+			  }
+			  return code;
+			};
+
+            Blockly.Blocks['triggerapi3'] = {
+			  init: function() {
+			    this.appendDummyInput()
+			        .appendField("退定往机票      ")
+			        .appendField(new Blockly.FieldDropdown([["show attr","show"], ["hide attr","hide"]]), "Attr");
+			    this.setPreviousStatement(true, null);
+			    this.setNextStatement(true, null);
+			    this.setColour(230);
+			 this.setTooltip("");
+			 this.setHelpUrl("");
+			  }
+			};
+			Blockly.JavaScript['triggerapi3'] = function(block) {
+			  var dropdown_attr = block.getFieldValue('Attr');
+			  if(dropdown_attr==="show"){
+				  	var datatosend={};
+				  		$.ajax({
+				  		type:"GET",
+				  		url:"http://127.0.0.1:10010/getServiceByID?ID=003",
+				  		dataType:"JSON",
+				  		async:false,
+						data:datatosend,
+						crossDomain:true,
+				  		success:function(data){
+				  		//调用显示属性接口
+	                    console.log(data);
+	                     var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+	                     //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+	                    code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+	                    code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+	                    code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+	                    code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+	                    code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+	                    code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+	                    code+="<table>"
+	                    $('#home').empty().append(code); 
+	                    $("tbody>tr:odd").addClass("odd");
+					    $("tbody>tr:even").addClass("even");
+						},
+						error: function(XMLHttpRequest, textStatus, errorThrown) {
+			            console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+						alert("失败");//进入到run里面了
+					}			 	
+				  	})	
+			  }else{
+			  	$('#home').empty();
+			  }
+			  return code;
+			};
+
+			
+			
+//			Blockly.Blocks['triggerapi1'] = {
+//			  init: function() {
+//			    this.appendDummyInput()
+//			        .appendField("预定往机票")
+//			        .appendField(new Blockly.FieldVariable("001"), "ID");
+//			    this.setInputsInline(false);
+//			    this.setPreviousStatement(true, null);
+//			    this.setNextStatement(true, null);
+//			    this.setColour(230);
+//			 this.setTooltip("");
+//			 this.setHelpUrl("");
+//			  }
+//			};
+//			Blockly.Blocks['triggerapi2'] = {
+//			  init: function() {
+//			    this.appendDummyInput()
+//			        .appendField("预定返机票")
+//			        .appendField(new Blockly.FieldVariable("002"), "ID");
+//			    this.setInputsInline(false);
+//			    this.setPreviousStatement(true, null);
+//			    this.setNextStatement(true, null);
+//			    this.setColour(230);
+//			 this.setTooltip("");
+//			 this.setHelpUrl("");
+//			  }
+//			};
+//			Blockly.Blocks['triggerapi3'] = {
+//			  init: function() {
+//			    this.appendDummyInput()
+//			        .appendField("退定往机票")
+//			        .appendField(new Blockly.FieldVariable("003"), "ID");
+//			    this.setInputsInline(false);
+//			    this.setPreviousStatement(true, null);
+//			    this.setNextStatement(true, null);
+//			    this.setColour(230);
+//			    this.setTooltip("");
+//			    this.setHelpUrl("");
+//			  }
+//			};
+//			
+//			Blockly.JavaScript['triggerapi1'] = function(block) {
+//				//Blockly.BlockDragger('triggerapi1',workspace).dragBlock(Event,goog.math.Coordinate);
+//			    var id = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('ID'), Blockly.Variables.NAME_TYPE).split('_')[1];	
+//			  	
+//			  		var datatosend={};
+//			  		$.ajax({
+//			  		type:"GET",
+//			  		url:"http://127.0.0.1:10010/getServiceByID?ID=001",
+//			  		dataType:"json",
+//			  		async:false,
+//					data:datatosend,
+//					crossDomain:true,
+//			  		success:function(data){
+//			  		//调用显示属性接口
+//                  console.log(data);
+//                   var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+//                   //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+//                  code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+//                  code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+//                  code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+//                  code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+//                  code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+//                  code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+//                  code+="<table>"
+//                  $('#home').empty().append(code); 
+//                  $("tbody>tr:odd").addClass("odd");
+//				    $("tbody>tr:even").addClass("even");
+//					},
+//					error: function(XMLHttpRequest, textStatus, errorThrown) {
+//		            console.log(XMLHttpRequest.status);
+//					console.log(XMLHttpRequest.readyState);
+//					console.log(textStatus);
+//					alert("失败");//进入到run里面了
+//				}			 	
+//			  	})	
+//			};
+//			
+//			Blockly.JavaScript['triggerapi2'] = function(block) {
+//			    var id = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('ID'), Blockly.Variables.NAME_TYPE).split('_')[1];
+//			  	var datatosend={
+//			  		'ID':id
+//			  	};
+//			  	
+//			  		$.ajax({
+//			  		type:"GET",
+//			  		url:"http://127.0.0.1:10010/getServiceByID",
+//			  		dataType:"JSON",
+//			  		async:false,
+//					data:datatosend,
+//					crossDomain:true,
+//			  		success:function(data){
+//			  		//调用显示属性接口
+//                  console.log(data);
+//                   var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+//                   //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+//                  code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+//                  code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+//                  code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+//                  code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+//                  code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+//                  code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+//                  code+="<table>"
+//                  $('#home').empty().append(code); 
+//                  $("tbody>tr:odd").addClass("odd");
+//				    $("tbody>tr:even").addClass("even");
+//					},
+//					error: function(XMLHttpRequest, textStatus, errorThrown) {
+//		            console.log(XMLHttpRequest.status);
+//					console.log(XMLHttpRequest.readyState);
+//					console.log(textStatus);
+//					alert("失败");//进入到run里面了
+//				}			 	
+//			  	})
+//			  	
+//			};
+//			
+//			Blockly.JavaScript['triggerapi3'] = function(block) {
+//			    var id = Blockly.JavaScript.variableDB_.getName(block.getFieldValue('ID'), Blockly.Variables.NAME_TYPE).split('_')[1];
+//			  	var datatosend={
+//			  		'ID':id
+//			  	};
+//			  	
+//			  		$.ajax({
+//			  		type:"GET",
+//			  		url:"http://127.0.0.1:10010/getServiceByID",
+//			  		dataType:"JSON",
+//			  		async:false,
+//					data:datatosend,
+//					crossDomain:true,
+//			  		success:function(data){
+//			  		//调用显示属性接口
+//                  console.log(data);
+//                   var code="<table><thead><tr><th >属性</th><th >取值</th></tr></thead>";
+//                   //i表cf                                                                                                                                                                                                                         示在data中的索引位置，n表示包含的信息的对象 
+//                  code+="<tr><td>ID</td><td>"+data[0].ID+"</td></tr>"
+//                  code+="<tr><td >Name</td><td>"+data[0].name+"</td></tr>";
+//                  code+="<tr><td >Type</td><td>"+data[0].type+"</td></tr>";
+//                  code+="<tr><td >Arg</td><td>"+data[0].argument+"</td></tr>";
+//                  code+="<tr><td >Event</td><td>"+data[0].event+"</td></tr>";
+//                  code+="<tr><td >URL</td><td>"+data[0].URL+"</td></tr>";
+//                  code+="<table>"
+//                  $('#home').empty().append(code); 
+//                  $("tbody>tr:odd").addClass("odd");
+//				    $("tbody>tr:even").addClass("even");
+//					},
+//					error: function(XMLHttpRequest, textStatus, errorThrown) {
+//		            console.log(XMLHttpRequest.status);
+//					console.log(XMLHttpRequest.readyState);
+//					console.log(textStatus);
+//					alert("失败");//进入到run里面了
+//				}			 	
+//			  	})	
+//			};
+			$(function(){
+				$("tbody>tr:odd").addClass("odd");
+				$("tbody>tr:even").addClass("even");
+			})
+		</script>
+	</body>
+</html>
